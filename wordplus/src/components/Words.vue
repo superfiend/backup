@@ -1,5 +1,7 @@
 <template>
   <div class="container">
+    <!--消息提示框-->
+    <alert v-bind:message="response"></alert>
     <h5 class="page-header">单词</h5>
     <table class="table table-striped">
       <thead>
@@ -23,13 +25,16 @@
 </template>
 
 <script>
+  import Alert from "./Alert";
+
   export default {
     data() {
-      return {words: []}
+      return {words: [], response: ""}
     },
+    props: ["message"],
     methods: {
       getWords() {
-        this.$http.get('http://localhost:3000/words').then(
+        this.$http.get('http://localhost:5000/words/').then(
           function (response) {
             this.words = response.body
           }
@@ -37,7 +42,13 @@
       }
     },
     created() {
+      if (this.$route.query.message) {
+        this.response = this.$route.query.message
+      }
       this.getWords()
+    },
+    components: {
+      "alert": Alert
     }
   }
 </script>
